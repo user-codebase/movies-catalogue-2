@@ -19,7 +19,7 @@ def homepage():
             movies = item["movies"]
             break
 
-    return render_template("homepage.html", movies=movies[:8], movie_lists=movie_lists)
+    return render_template("homepage.html", movies=movies[:8], movie_lists=movie_lists, selected_list_type=requested_list_type)
 
 @app.context_processor
 def utility_processor():
