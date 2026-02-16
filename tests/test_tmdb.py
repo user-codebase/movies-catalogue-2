@@ -1,6 +1,7 @@
 import pytest
 from unittest.mock import Mock
 from movies_catalogue import tmdb_client
+from movies_catalogue.app import app
 
 def test_get_single_movie_calls_correct_endpoint(monkeypatch):
     mock_response = Mock()
@@ -107,3 +108,17 @@ def test_get_movies_list_correct_endpoint(monkeypatch):
     called_url = mock_get.call_args[0][0]
     
     assert called_url == "https://api.themoviedb.org/3/movie/top_rated"
+
+
+@pytest.mark.parametrize("list_type", ["popular", "top_rated", "upcoming", "now_playing"])
+def test_homepage_with_list_types(monkeypatch, list_type):
+    test_movie_list = [
+        {"api_name": list_type, "movies": [{"id": 1, "title": "Test Movie 1"}]},
+        {"api_name": list_type, "movies": [{"id": 2, "title": "Teste Movie 2"}]}
+    ]
+    api_mock = Mock(return_value=test_movie_list)
+    monkeypatch.setattr(tmdb_client, "get_all_lists", api_mock)
+
+    with app.test_client() as client:
+        response = client.get(f'/?list_type={list_type}')
+        assert response.status_code == 200

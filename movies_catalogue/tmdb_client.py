@@ -72,4 +72,3 @@ def get_all_lists():
     }
     movie_lists = [now_playing, popular, top_rated, upcoming]
     return movie_lists
-    
