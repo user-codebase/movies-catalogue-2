@@ -110,15 +110,28 @@ def test_get_movies_list_correct_endpoint(monkeypatch):
     assert called_url == "https://api.themoviedb.org/3/movie/top_rated"
 
 
+# @pytest.mark.parametrize("list_type", ["popular", "top_rated", "upcoming", "now_playing"])
+# def test_homepage_with_list_types(monkeypatch, list_type):
+#     test_movie_list = [
+#         {"api_name": list_type, "movies": [{"id": 1, "title": "Test Movie 1"}]},
+#         {"api_name": list_type, "movies": [{"id": 2, "title": "Teste Movie 2"}]}
+#     ]
+#     api_mock = Mock(return_value=test_movie_list)
+#     monkeypatch.setattr(tmdb_client, "get_all_lists", api_mock)
+
+#     with app.test_client() as client:
+#         response = client.get(f'/?list_type={list_type}')
+#         assert response.status_code == 200
+#         api_mock.assert_called_once()
+
+
 @pytest.mark.parametrize("list_type", ["popular", "top_rated", "upcoming", "now_playing"])
 def test_homepage_with_list_types(monkeypatch, list_type):
-    test_movie_list = [
-        {"api_name": list_type, "movies": [{"id": 1, "title": "Test Movie 1"}]},
-        {"api_name": list_type, "movies": [{"id": 2, "title": "Teste Movie 2"}]}
-    ]
+    test_movie_list = {"results": [{"id": 1, "title": "Test Movie 1"}]}
     api_mock = Mock(return_value=test_movie_list)
-    monkeypatch.setattr(tmdb_client, "get_all_lists", api_mock)
+    monkeypatch.setattr(tmdb_client, "get_movies_list", api_mock)
 
     with app.test_client() as client:
         response = client.get(f'/?list_type={list_type}')
         assert response.status_code == 200
+        api_mock.assert_called_once_with(list_type)

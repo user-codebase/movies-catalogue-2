@@ -9,17 +9,18 @@
         <div class="col-md-6">
             <img class="img-fluid rounded" src="{{ tmdb_image_url(selected_backdrop.file_path, 'w500') }}">
         </div>
-    <div class="col-md-4">
-        <h3>{{ movie.tagline }}</h3>
-        <p>
-            {{ movie.overview}}
-        </p>
-        <div>
-            <dt>Budget</dt>
-            <dd>{{ movie.budget }}</dd>
-            <dt>Genre</dt>
-            <dd>{% for genre in movie.genres %}{{ genre.name }}, {% endfor %}</dd>
-            </dl>
+        <div class="col-md-4">
+            <h3>{{ movie.tagline }}</h3>
+            <p>
+                {{ movie.overview}}
+            </p>
+            <div>
+                <dt>Budget</dt>
+                <dd>{{ movie.budget }}</dd>
+                <dt>Genre</dt>
+                <dd>{% for genre in movie.genres %}{{ genre.name }}, {% endfor %}</dd>
+                </dl>
+            </div>
         </div>
     </div>
     <h3 class="my-4">Cast</h3>

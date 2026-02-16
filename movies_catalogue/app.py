@@ -4,22 +4,46 @@ import random
 
 app = Flask(__name__)
 
+# @app.route('/')
+# def homepage():
+#     movie_lists = tmdb_client.get_all_lists()
+#     requested_list_type = request.args.get('list_type')
+#     available_api_names = [item["api_name"] for item in movie_lists]
+
+#     if requested_list_type not in available_api_names:
+#         requested_list_type = "popular"
+    
+#     movies = []
+#     for item in movie_lists:
+#         if item["api_name"] == requested_list_type:
+#             movies = item["movies"]
+#             break
+
+#     return render_template("homepage.html", movies=movies[:8], movie_lists=movie_lists, selected_list_type=requested_list_type)
+
+
 @app.route('/')
 def homepage():
-    movie_lists = tmdb_client.get_all_lists()
+    available_list_types = ["popular", "top_rated", "upcoming", "now_playing"]
     requested_list_type = request.args.get('list_type')
-    available_api_names = [item["api_name"] for item in movie_lists]
 
-    if requested_list_type not in available_api_names:
+    if requested_list_type not in available_list_types:
         requested_list_type = "popular"
-    
-    movies = []
-    for item in movie_lists:
-        if item["api_name"] == requested_list_type:
-            movies = item["movies"]
-            break
+
+    movies_data = tmdb_client.get_movies_list(requested_list_type)
+    movies = movies_data["results"]
+
+    movie_lists = [
+        {"button_name": "Now playing", "api_name": "now_playing"},
+        {"button_name": "Popular", "api_name": "popular"},
+        {"button_name": "Top rated", "api_name": "top_rated"},
+        {"button_name": "Upcoming", "api_name": "upcoming"}
+    ]
 
     return render_template("homepage.html", movies=movies[:8], movie_lists=movie_lists, selected_list_type=requested_list_type)
+
+
+
 
 @app.context_processor
 def utility_processor():
